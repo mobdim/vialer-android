@@ -1,5 +1,6 @@
 Vialer Android
 ==============
+README
 
 Vialer is a VoIP client which utilizes the VoIPGRID platform. Up until version 3.0 it's main purpose is to provide an easy interface for the "Two step Calling" function of the platform. This feature enables the user of the app to dial a phone number as if you were "at the office". The receiver sees the "office" number as the calling number (CLI). Using the app, the user can also:
 
