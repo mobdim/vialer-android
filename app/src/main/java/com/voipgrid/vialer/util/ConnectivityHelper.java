@@ -6,15 +6,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.voipgrid.vialer.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Helper class to check connectivity of the device.

@@ -21,12 +21,12 @@ import com.voipgrid.vialer.api.models.MobileNumber;
 import com.voipgrid.vialer.api.models.PhoneAccount;
 import com.voipgrid.vialer.api.models.SystemUser;
 import com.voipgrid.vialer.onboarding.SetupActivity;
-import com.voipgrid.vialer.util.LoginRequiredActivity;
-import com.voipgrid.vialer.util.PhoneAccountHelper;
 import com.voipgrid.vialer.util.DialogHelper;
-import com.voipgrid.vialer.util.MiddlewareHelper;
-import com.voipgrid.vialer.util.PhoneNumberUtils;
 import com.voipgrid.vialer.util.JsonStorage;
+import com.voipgrid.vialer.util.LoginRequiredActivity;
+import com.voipgrid.vialer.util.MiddlewareHelper;
+import com.voipgrid.vialer.util.PhoneAccountHelper;
+import com.voipgrid.vialer.util.PhoneNumberUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
