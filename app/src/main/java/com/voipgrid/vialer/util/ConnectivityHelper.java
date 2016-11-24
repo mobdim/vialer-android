@@ -126,7 +126,7 @@ public class ConnectivityHelper {
             @Override
             public void run() {
                 // Keep waiting untill the remaining time is less then the interval
-                if(remainingTime < interval) {
+                if(remainingTime > interval) {
                     waitForLTE(context, remainingTime, interval);
                 } else if(getConnectionType() != TYPE_LTE) {
                     // Turn wifi back on if we don't succes in connecting with LTE before the timeout

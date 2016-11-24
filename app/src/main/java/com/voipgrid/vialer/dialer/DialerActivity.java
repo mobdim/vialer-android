@@ -3,7 +3,6 @@ package com.voipgrid.vialer.dialer;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -16,16 +15,12 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,9 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.voipgrid.vialer.Preferences;
 import com.voipgrid.vialer.R;
 import com.voipgrid.vialer.analytics.AnalyticsApplication;
 import com.voipgrid.vialer.analytics.AnalyticsHelper;
@@ -48,12 +41,11 @@ import com.voipgrid.vialer.t9.ContactCursorLoader;
 import com.voipgrid.vialer.util.ConnectivityHelper;
 import com.voipgrid.vialer.util.CustomReceiver;
 import com.voipgrid.vialer.util.DialHelper;
-import com.voipgrid.vialer.util.DialogHelper;
 import com.voipgrid.vialer.util.IconHelper;
+import com.voipgrid.vialer.util.JsonStorage;
 import com.voipgrid.vialer.util.LoginRequiredActivity;
 import com.voipgrid.vialer.util.NetworkStateViewHelper;
 import com.voipgrid.vialer.util.PhoneNumberUtils;
-import com.voipgrid.vialer.util.JsonStorage;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -304,7 +296,6 @@ public class DialerActivity extends LoginRequiredActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("DEBUG", "Dialeractivity");
         // Check if wifi should be turned back on.
         if(ConnectivityHelper.mWifiKilled) {
             mConnectivityHelper.useWifi(this, true);
