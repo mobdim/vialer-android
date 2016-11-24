@@ -3,21 +3,27 @@ package com.voipgrid.vialer.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.voipgrid.vialer.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Helper class to check connectivity of the device.
  */
 public class ConnectivityHelper {
-    private static final long TYPE_NO_CONNECTION = -1;
-    private static final long TYPE_SLOW = 0;
-    private static final long TYPE_WIFI = 1;
-    private static final long TYPE_LTE = 2;
+    public static final long TYPE_NO_CONNECTION = -1;
+    public static final long TYPE_SLOW = 0;
+    public static final long TYPE_WIFI = 1;
+    public static final long TYPE_LTE = 2;
 
     public final String CONNECTION_WIFI = "Wifi";
     public final String CONNECTION_4G = "4G";
@@ -25,6 +31,7 @@ public class ConnectivityHelper {
 
     private final ConnectivityManager mConnectivityManager;
     private final TelephonyManager mTelephonyManager;
+    private int mConnectionCheckCounter;
 
     private static final List<Long> sFastDataTypes = new ArrayList<>();
 
@@ -112,5 +119,36 @@ public class ConnectivityHelper {
         TelephonyManager t = (TelephonyManager) context.getSystemService(
                 Context.TELEPHONY_SERVICE);
         return new ConnectivityHelper(c, t);
+    }
+
+    public void useWifi(Context context, boolean useWifi) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(useWifi);
+    }
+
+    public void waitForLTE(final Context context, int timeout, final int interval) {
+        final int remainingTime = timeout - interval;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Keep waiting untill the remaining time is less then the interval
+                if(remainingTime < interval) {
+                    Log.d("DEBUG", "rem:int = "+remainingTime+":"+interval);
+                    waitForLTE(context, remainingTime, interval);
+                } else if(getConnectionType() != TYPE_LTE) {
+                    Log.d("DEBUG", "> "+getConnectionType());
+                    // Turn wifi back on if we don't succes in connecting with LTE before the timeout
+                    useWifi(context, true);
+                }
+            }
+        }, interval);
+    }
+
+    public void attemptUsingLTE(final Context context, int timeout) {
+        mConnectionCheckCounter = 0;
+        if (getConnectionType() == ConnectivityManager.TYPE_WIFI) {
+            useWifi(context, false);
+            waitForLTE(context, timeout+(timeout/10), timeout/10);
+        }
     }
 }

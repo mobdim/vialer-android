@@ -3,11 +3,15 @@ package com.voipgrid.vialer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.voipgrid.vialer.api.models.PhoneAccount;
 import com.voipgrid.vialer.api.models.SystemUser;
+import com.voipgrid.vialer.util.ConnectivityHelper;
 import com.voipgrid.vialer.util.JsonStorage;
 import com.voipgrid.vialer.logging.RemoteLogger;
+
+import java.util.Objects;
 
 /**
  * Class used for storing preferences related to SIP.
@@ -19,6 +23,12 @@ public class Preferences {
     public static final String PREF_REMOTE_LOGGING = "PREF_REMOTE_LOGGING";
     public static final String PREF_REMOTE_LOGGING_ID = "PREF_REMOTE_LOGGING_ID";
     public static final String PREF_FINISHED_ONBOARDING = "PREF_FINISHED_ONBOARDING";
+
+    public static final String CONNECTION_PREFERENCE = "CONNECTION_PREFERENCE";
+    public static final long CONNECTION_PREFERENCE_NONE = -10;
+    public static final long CONNECTION_PREFERENCE_WIFI = ConnectivityHelper.TYPE_WIFI;
+    public static final long CONNECTION_PREFERENCE_LTE = ConnectivityHelper.TYPE_LTE;
+
 
     public static final boolean DEFAULT_VALUE_HAS_SIP_ENABLED = true;
     public static final boolean DEFAULT_VALUE_HAS_SIP_PERMISSION = false;
@@ -132,5 +142,16 @@ public class Preferences {
      */
     public boolean canUseSip() {
         return hasSipPermission() && hasSipEnabled() && hasPhoneAccount();
+    }
+
+    public void setConnectionPreference(long preference) {
+        mPreferences.edit().putLong(CONNECTION_PREFERENCE, preference).apply();
+    }
+    public boolean hasConnectionPerference(long preference) {
+        return preference == mPreferences.getLong(CONNECTION_PREFERENCE, CONNECTION_PREFERENCE_NONE);
+    }
+
+    public long getConnectionPreference() {
+        return mPreferences.getLong(CONNECTION_PREFERENCE, CONNECTION_PREFERENCE_NONE);
     }
 }
