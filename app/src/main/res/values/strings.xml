@@ -112,11 +112,11 @@
     <string name="account_outgoing_number_edit_text_hint">Outgoing number</string>
     <string name="action_done">Done</string>
     <string name="action_edit">Edit</string>
-    <string name="call_connection_always_LTE">Always use LTE</string>
-    <string name="call_connection_use_wifi">Use Wifi</string>
-    <string name="call_connection_optional">Optional</string>
-    <string name="connection_preference_dialog_title">Hint: Disable WiFi for this call</string>
-    <string name="connection_preference_dialog_message">When using LTE (4g) your connection is more stable and therefor results in better audio quality \n\n Temporarly disable WiFi?</string>
+    <string name="call_connection_always_LTE">Only 4G</string>
+    <string name="call_connection_use_wifi">WiFi when connected</string>
+    <string name="call_connection_optional">Show pop-up for outgoing calls</string>
+    <string name="connection_preference_dialog_title">Advice: turn off WiFi for this call</string>
+    <string name="connection_preference_dialog_message">Mobile networks LTE(4G) are more stable which leads to a higher audio quality. \n\nTurn off WiFi for this call?</string>
     <string name="connection_preference_switch_toast">Trying to handover to LTE(4G)</string>
 
     <string name="url_app_info">http://vialerapp.com/app-info/</string>

@@ -31,7 +31,7 @@ public class ConnectivityHelper {
 
     private final ConnectivityManager mConnectivityManager;
     private final TelephonyManager mTelephonyManager;
-    private int mConnectionCheckCounter;
+    public static boolean mWifiKilled = false;
 
     private static final List<Long> sFastDataTypes = new ArrayList<>();
 
@@ -133,10 +133,8 @@ public class ConnectivityHelper {
             public void run() {
                 // Keep waiting untill the remaining time is less then the interval
                 if(remainingTime < interval) {
-                    Log.d("DEBUG", "rem:int = "+remainingTime+":"+interval);
                     waitForLTE(context, remainingTime, interval);
                 } else if(getConnectionType() != TYPE_LTE) {
-                    Log.d("DEBUG", "> "+getConnectionType());
                     // Turn wifi back on if we don't succes in connecting with LTE before the timeout
                     useWifi(context, true);
                 }
@@ -145,9 +143,9 @@ public class ConnectivityHelper {
     }
 
     public void attemptUsingLTE(final Context context, int timeout) {
-        mConnectionCheckCounter = 0;
         if (getConnectionType() == ConnectivityManager.TYPE_WIFI) {
             useWifi(context, false);
+            mWifiKilled = true;
             waitForLTE(context, timeout+(timeout/10), timeout/10);
         }
     }

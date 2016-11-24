@@ -88,9 +88,6 @@ public class DialerActivity extends LoginRequiredActivity implements
     private String t9Query;
     private boolean mHasPermission;
     private boolean mAskForPermission;
-    private int mMaximumNetworkSwitchDelay = 2500;
-    private Preferences mPreferences;
-    private boolean mKilledWifi = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +102,6 @@ public class DialerActivity extends LoginRequiredActivity implements
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mJsonStorage = new JsonStorage(this);
-        mPreferences = new Preferences(this);
 
         mConnectivityHelper = ConnectivityHelper.get(this);
 
@@ -308,11 +304,11 @@ public class DialerActivity extends LoginRequiredActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.d("DEBUG", "onresume");
-        if(mKilledWifi) {
+        Log.d("DEBUG", "Dialeractivity");
+        // Check if wifi should be turned back on.
+        if(ConnectivityHelper.mWifiKilled) {
             mConnectivityHelper.useWifi(this, true);
-            mKilledWifi = false;
+            ConnectivityHelper.mWifiKilled = false;
         }
         registerReceivers();
 
@@ -378,55 +374,7 @@ public class DialerActivity extends LoginRequiredActivity implements
      * @param number number to call
      * @param contactName contact name to display
      */
-    public void onCallNumber(final String number, final String contactName) {
-        if(mConnectivityHelper.getConnectionType() == ConnectivityHelper.TYPE_WIFI) {
-            if(mPreferences.hasConnectionPerference(mConnectivityHelper.TYPE_LTE)) {
-                switchNetworkAndCallNumber(number, contactName);
-            } else if(mPreferences.hasConnectionPerference(Preferences.CONNECTION_PREFERENCE_NONE)) {
-                showConnectionPickerDialog(number, contactName);
-            } else if(mPreferences.hasConnectionPerference(Preferences.CONNECTION_PREFERENCE_WIFI)) {
-                callNumber(number, contactName);
-            }
-        } else {
-            callNumber(number, contactName);
-        }
-    }
-
-    private void switchNetworkAndCallNumber(final String number, final String contactName) {
-        mConnectivityHelper.attemptUsingLTE(this, mMaximumNetworkSwitchDelay);
-        mKilledWifi = true;
-        Toast.makeText(DialerActivity.this, getString(R.string.connection_preference_switch_toast), Toast.LENGTH_LONG).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                callNumber(number, contactName);
-            }
-        }, mMaximumNetworkSwitchDelay);
-    }
-
-    private void showConnectionPickerDialog(final String number, final String contactName) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(this.getString(R.string.connection_preference_dialog_title));
-        builder.setMessage(this.getString(R.string.connection_preference_dialog_message));
-        builder.setPositiveButton(this.getString(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        switchNetworkAndCallNumber(number, contactName);
-                    }
-                });
-        builder.setNegativeButton(this.getString(R.string.no),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        callNumber(number, contactName);
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    public void callNumber(String number, String contactName) {
+    public void onCallNumber(String number, String contactName) {
         new DialHelper(this, mJsonStorage, mConnectivityHelper, mAnalyticsHelper)
                 .callNumber(PhoneNumberUtils.format(number), contactName);
         mSharedPreferences.edit().putString(LAST_DIALED, number).apply();

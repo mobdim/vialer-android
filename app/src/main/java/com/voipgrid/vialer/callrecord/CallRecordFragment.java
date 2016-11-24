@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +160,13 @@ public class CallRecordFragment extends ListFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("DEBUG", "Dialeractivity");
 
+        // Check if wifi should be turned back on.
+        if(ConnectivityHelper.mWifiKilled) {
+            mConnectivityHelper.useWifi(getActivity(), true);
+            ConnectivityHelper.mWifiKilled = false;
+        }
         mNetworkStateViewHelper.updateNetworkStateView();
         mNetworkStateViewHelper.startListening();
         mAdapter.mCallAlreadySetup = false;
