@@ -145,7 +145,7 @@ public class Preferences {
         mPreferences.edit().putLong(CONNECTION_PREFERENCE, preference).apply();
     }
     public boolean hasConnectionPerference(long preference) {
-        return preference == mPreferences.getLong(CONNECTION_PREFERENCE, CONNECTION_PREFERENCE_NONE);
+        return preference == getConnectionPreference();
     }
 
     public long getConnectionPreference() {

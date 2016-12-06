@@ -71,6 +71,11 @@ public class AccountActivity extends LoginRequiredActivity implements
         mSwitch = (CompoundButton) findViewById(R.id.account_sip_switch);
         mSwitch.setOnCheckedChangeListener(this);
 
+        initConnectionSpinner();
+        initRemoteLoggingSwitch();
+    }
+
+    private void initConnectionSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.call_connection_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.connection_array, android.R.layout.simple_spinner_item);
@@ -78,8 +83,6 @@ public class AccountActivity extends LoginRequiredActivity implements
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getPosition(converseFromPreference((mPreferences.getConnectionPreference()))));
         spinner.setOnItemSelectedListener(this);
-
-        initRemoteLoggingSwitch();
     }
 
     /**

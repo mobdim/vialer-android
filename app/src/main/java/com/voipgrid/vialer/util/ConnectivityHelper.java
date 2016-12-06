@@ -120,16 +120,21 @@ public class ConnectivityHelper {
         wifiManager.setWifiEnabled(useWifi);
     }
 
+    /**
+     * Sets a timer that runs untill the timeout limit is reached. At each interval it
+     * will check wheter or not we succeeded in enabling LTE. If it did not succeed then
+     * we will try to get Wifi on again.
+     */
     public void waitForLTE(final Context context, int timeout, final int interval) {
         final int remainingTime = timeout - interval;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Keep waiting untill the remaining time is less then the interval
+                // Keep waiting untill the remaining time is less then the interval.
                 if(remainingTime > interval) {
                     waitForLTE(context, remainingTime, interval);
                 } else if(getConnectionType() != TYPE_LTE) {
-                    // Turn wifi back on if we don't succes in connecting with LTE before the timeout
+                    // Turn wifi back on if we don't succes in connecting with LTE before the timeout.
                     useWifi(context, true);
                 }
             }
