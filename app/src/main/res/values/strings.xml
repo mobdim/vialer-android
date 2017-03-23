@@ -29,6 +29,7 @@
     <string name="dialer_warning_no_connection">No data connection available</string>
     <string name="version_info">Version: %1$s</string>
     <string name="version_info_beta">Version: %1$s Build: %2$s</string>
+    <string name="vialer_connection_service" translatable="false">Vialer Connection service</string>
 
     <!-- UpdateHelper -->
     <string name="title_activity_update">Updating</string>

@@ -10,6 +10,8 @@ public interface SipConstants {
      */
     String ACTION_VIALER_OUTGOING = "com.voipgrid.vialer.VIALER_OUTGOING";
 
+    String ACTION_VIALER_OUTGOING_NATIVE = "com.voipgrid.vialer.VIALER_OUTGOING_NATIVE";
+
     /**
      * ACTION parameter for explicit Intents to start this Service for INCOMING call.
      */

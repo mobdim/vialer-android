@@ -13,6 +13,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.voipgrid.vialer.CallActivity;
 import com.voipgrid.vialer.Preferences;
@@ -206,6 +207,15 @@ public class SipService extends Service {
                         intent.getStringExtra(SipConstants.EXTRA_CONTACT_NAME),
                         intent.getStringExtra(SipConstants.EXTRA_PHONE_NUMBER),
                         true
+                );
+                break;
+            case SipConstants.ACTION_VIALER_OUTGOING_NATIVE:
+                Log.e(TAG, " ACTION_VIALER_OUTGOING_NATIVE");
+                makeCall(
+                        number,
+                        intent.getStringExtra(SipConstants.EXTRA_CONTACT_NAME),
+                        intent.getStringExtra(SipConstants.EXTRA_PHONE_NUMBER),
+                        false
                 );
                 break;
             default:

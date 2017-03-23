@@ -29,6 +29,7 @@ import com.voipgrid.vialer.contacts.UpdateChangedContactsService;
 import com.voipgrid.vialer.dialer.DialerActivity;
 import com.voipgrid.vialer.onboarding.AccountFragment;
 import com.voipgrid.vialer.onboarding.SetupActivity;
+import com.voipgrid.vialer.sip.PhoneAccountCallManager;
 import com.voipgrid.vialer.util.ConnectivityHelper;
 import com.voipgrid.vialer.util.CustomReceiver;
 import com.voipgrid.vialer.util.JsonStorage;
@@ -37,6 +38,8 @@ import com.voipgrid.vialer.util.PhonePermission;
 import com.voipgrid.vialer.util.UpdateActivity;
 import com.voipgrid.vialer.util.UpdateHelper;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 
 public class MainActivity extends NavigationDrawerActivity implements
         View.OnClickListener,
@@ -44,6 +47,7 @@ public class MainActivity extends NavigationDrawerActivity implements
 
     private ViewPager mViewPager;
     private boolean mAskForPermission = true;
+    private boolean mConnectionServicePermission = true;
 
     private CustomReceiver mMediaButtonReceiver;
     private BroadcastReceiver mBroadcastReceiver;
@@ -94,7 +98,7 @@ public class MainActivity extends NavigationDrawerActivity implements
             SyncUtils.requestContactSync(this);
         } else {
             // Live contact updates are not supported below api level 18.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+            if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
                     && ContactsPermission.hasPermission(this)) {
                 startService(new Intent(this, UpdateChangedContactsService.class));
             }
@@ -157,6 +161,10 @@ public class MainActivity extends NavigationDrawerActivity implements
                 mAskForPermission = false;
                 ContactsPermission.askForPermission(this);
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            new PhoneAccountCallManager(this);
         }
     }
 
@@ -253,7 +261,7 @@ public class MainActivity extends NavigationDrawerActivity implements
      */
     public void openDialer() {
         Intent intent = new Intent(this, DialerActivity.class);
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+        if(SDK_INT > Build.VERSION_CODES.KITKAT) {
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(
                             this, findViewById(R.id.floating_action_button),
