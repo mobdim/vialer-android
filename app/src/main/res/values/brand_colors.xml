@@ -15,4 +15,8 @@
     <!-- Internet connection warning bar colors -->
     <color name="dialer_warning_background">#B2B2B2</color>
     <color name="dialer_warning_text">@color/color_accent</color>
+
+    <!-- Background gradient colors -->
+    <color name="bg_gradient_start_color">#FF8D07</color>
+    <color name="bg_gradient_end_color">#FF742F</color>
 </resources>
