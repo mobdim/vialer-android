@@ -67,10 +67,10 @@ repositories {
 }
 
 ext {
-    supportLibVersion = "25.2.0"
+    supportLibVersion = "25.3.1"
     espressoVersion = "2.2"
     androidTestVersion = "0.5"
-    firebaseVersion = "10.2.0"
+    firebaseVersion = "10.2.1"
     jUnitVersion = "4.12"
     powerMockVersion = "1.6.4"
     okHttpVersion = "3.2.0"
@@ -93,6 +93,7 @@ dependencies {
     compile "com.android.support:gridlayout-v7:${supportLibVersion}"
     compile "com.android.support:cardview-v7:${supportLibVersion}"
     compile "com.android.support:support-v4:${supportLibVersion}"
+    compile "com.android.support.constraint:constraint-layout:1.0.2"
 
     // Firebase setup.
     compile "com.google.firebase:firebase-messaging:${firebaseVersion}"

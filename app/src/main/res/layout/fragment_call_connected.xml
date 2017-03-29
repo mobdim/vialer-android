@@ -1,20 +1,121 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:gravity="center_horizontal|bottom"
     android:id="@+id/fragment_call_connected">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_hangup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_call_end_white"
-        app:backgroundTint="@color/call_fab_hangup_color"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        app:elevation="@dimen/fab_elevation"
-        app:borderWidth="@dimen/fab_border_width"
-        />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_call_dialog"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/call_info">
+
+        <RelativeLayout
+            android:id="@+id/call_buttons_container"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_container"
+            app:layout_constraintLeft_toRightOf="@+id/fragment_container"
+            app:layout_constraintRight_toRightOf="@+id/fragment_container"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_container">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_speaker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:src="@drawable/ic_volume_on_enabled"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_microphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/button_speaker"
+                android:layout_toRightOf="@+id/button_speaker"
+                android:onClick="onClick"
+                android:src="@drawable/ic_mic_off_enabled"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_keypad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/button_microphone"
+                android:layout_toRightOf="@+id/button_microphone"
+                android:onClick="onClick"
+                android:src="@drawable/ic_dialer_enabled"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_onhold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/button_keypad"
+                android:layout_toRightOf="@id/button_keypad"
+                android:onClick="onClick"
+                android:src="@drawable/ic_pause_enabled"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_transfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/button_onhold"
+                android:layout_toRightOf="@id/button_onhold"
+                android:onClick="onClick"
+                android:src="@drawable/ic_call_transfer"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_bluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/button_transfer"
+                android:layout_toRightOf="@id/button_transfer"
+                android:onClick="onClick"
+                android:src="@drawable/ic_bluetooth"
+                android:visibility="gone"
+                app:backgroundTint="@color/call_buttons"
+                app:borderWidth="0dp"
+                app:elevation="0dp" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="25dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp">
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
 </LinearLayout>
