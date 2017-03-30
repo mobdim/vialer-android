@@ -53,7 +53,7 @@ public interface Api {
     @GET("api/cdr/record/")
     Call<VoipGridResponse<CallRecord>> getRecentCalls(@Query("limit") int limit,
                                                       @Query("offset") int offset,
-                                                      @Query("call_date__gt") String date);
+                                                      @Query("call_date__gte") String date);
 
     @GET("api/userdestination/")
     Call<VoipGridResponse<UserDestination>> getUserDestination();
