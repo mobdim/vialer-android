@@ -356,7 +356,7 @@ public class SipCall extends org.pjsip.pjsua2.Call {
                 delete();
             } else if (callState == pjsip_inv_state.PJSIP_INV_STATE_EARLY) {
                 Log.d("DEBUG", "PJSIP_INV_STATE_EARLY ");
-                onCallStartRingback();
+//                onCallStartRingback();
             }
             Log.d("DEBUG", "mRingbackStarted "+mRingbackStarted);
 

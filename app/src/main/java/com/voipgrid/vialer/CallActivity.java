@@ -25,6 +25,7 @@ import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -511,6 +512,7 @@ public class CallActivity extends AppCompatActivity
 
             vibrate(false);
             playRingtone(false);
+            Log.d("DEBUG", "onPause");
         }
         unRegisterReceivers();
     }
@@ -670,6 +672,7 @@ public class CallActivity extends AppCompatActivity
 
                 // Stop the ringtone and vibrator when the call has been disconnected.
                 playRingtone(false);
+                Log.d("DEBUG", "disconnected");
                 vibrate(false);
 
                 // When the user is transferring a call.
@@ -1186,6 +1189,8 @@ public class CallActivity extends AppCompatActivity
     public void answer() {
         mRemoteLogger.d(TAG + " answer");
         playRingtone(false);
+        Log.d("DEBUG", "answer");
+
         vibrate(false);
 
         View callButtonsContainer = findViewById(R.id.call_buttons_container);
@@ -1223,6 +1228,7 @@ public class CallActivity extends AppCompatActivity
     public void decline() {
         mRemoteLogger.d(TAG + " decline");
         playRingtone(false);
+        Log.d("DEBUG", "decline");
         vibrate(false);
         if (mServiceBound) {
             try {
@@ -1242,18 +1248,23 @@ public class CallActivity extends AppCompatActivity
     }
 
     private void playRingtone(boolean play) {
+        Log.d("DEBUG", "play "+play);
+
         if (mRingtone != null) {
             if (play && !mRingtone.isPlaying()) {
                 mAudioManager.setMode(AudioManager.MODE_RINGTONE);
                 setVolumeControlStream(AudioManager.STREAM_RING);
                 mRingtone.play();
+                Log.d("DEBUG", "start ringtone");
+
             } else {
                 mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
                 setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
                 mRingtone.stop();
+                Log.d("DEBUG", "stop ringtone");
             }
         }
-    }
+}
 
     private void vibrate(boolean vibrate) {
         if (mVibrator != null) {
@@ -1447,6 +1458,8 @@ public class CallActivity extends AppCompatActivity
 
             case AudioManager.RINGER_MODE_SILENT:
                 playRingtone(false);
+                Log.d("DEBUG", "case AudioManager.RINGER_MODE_SILENT");
+
                 vibrate(false);
                 break;
         }
