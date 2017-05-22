@@ -329,23 +329,36 @@ public class SipCall extends org.pjsip.pjsua2.Call {
      */
     @Override
     public void onCallState(OnCallStateParam onCallStateParam) {
+        Log.d("DEBUG", "mRingbackStarted "+mRingbackStarted);
+
+        Log.d("DEBUG", "onCallState "+onCallStateParam);
         try {
             CallInfo info = getInfo();  // Check to see if we can get CallInfo with this callback.
             pjsip_inv_state callState = info.getState();
 
             if (callState == pjsip_inv_state.PJSIP_INV_STATE_CALLING) {
+                Log.d("DEBUG", "PJSIP_INV_STATE_CALLING ");
+
                 // We are handling a outgoing call.
                 mOutgoingCall = true;
                 onCallStartRingback();
             }  else if (callState == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
+                Log.d("DEBUG", "PJSIP_INV_STATE_CONFIRMED ");
+
                 // Call has been setup, stop ringback.
                 onCallStopRingback();
                 onCallConnected();
             } else if (callState == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
+                Log.d("DEBUG", "PJSIP_INV_STATE_DISCONNECTED ");
+
                 onCallStopRingback();
                 onCallDisconnected();
                 delete();
+            } else if (callState == pjsip_inv_state.PJSIP_INV_STATE_EARLY) {
+                Log.d("DEBUG", "PJSIP_INV_STATE_EARLY ");
+                onCallStartRingback();
             }
+            Log.d("DEBUG", "mRingbackStarted "+mRingbackStarted);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -531,6 +544,7 @@ public class SipCall extends org.pjsip.pjsua2.Call {
     }
 
     public void onCallStartRingback() {
+        Log.d("DEBUG", "onCallStartRingback");
         if (!mRingbackStarted) {
             mRemoteLogger.d(TAG + " onCallStartRingback");
             mSipService.startRingback();
@@ -539,6 +553,7 @@ public class SipCall extends org.pjsip.pjsua2.Call {
     }
 
     public void onCallStopRingback() {
+        Log.d("DEBUG", "onCallStopRingback");
         if (mRingbackStarted) {
             mRemoteLogger.d(TAG + " onCallStopRingback");
             mSipService.stopRingback();
