@@ -110,7 +110,7 @@ public class CallActivity extends AppCompatActivity
     private boolean mBluetoothEnabled = false;
     private boolean mBluetoothDeviceConnected = false;
     private boolean mSelfHangup = false;
-    private boolean mPausedRinging = false;
+    private boolean mFocusDuringOnPause;
     private AnalyticsHelper mAnalyticsHelper;
     private MediaPlayer mMediaPlayer;
     private Vibrator mVibrator;
@@ -519,13 +519,12 @@ public class CallActivity extends AppCompatActivity
         }
         registerReceivers();
         mRemoteLogger.d(TAG + " onResume");
-        if (mIncomingCallIsRinging && mPausedRinging) {
+        if (mIncomingCallIsRinging && mFocusDuringOnPause) {
             if (mMediaPlayer == null) {
                 setRingtoneMediaPlayer();
             }
             setRingerMode();
         }
-        mPausedRinging = false;
 
         // Bind the SipService to the activity.
         bindService(new Intent(this, SipService.class), mConnection, Context.BIND_AUTO_CREATE);
@@ -554,6 +553,7 @@ public class CallActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        mFocusDuringOnPause = hasWindowFocus();
         if (mIncomingCallIsRinging) {
             mNotificationHelper.removeAllNotifications();
             mNotificationId = mNotificationHelper.displayNotificationWithCallActions(mCallerIdToDisplay, mPhoneNumberToDisplay);
@@ -566,7 +566,6 @@ public class CallActivity extends AppCompatActivity
         super.onStop();
         mRemoteLogger.d(TAG + " onStop");
 
-
         // Unregister the SipService BroadcastReceiver when the activity pauses.
         unregisterReceiver(mBluetoothReceiver);
         mBroadcastManager.unregisterReceiver(mCallStatusReceiver);
@@ -574,7 +573,6 @@ public class CallActivity extends AppCompatActivity
         if (mIncomingCallIsRinging) {
             vibrate(false);
             playRingtone(false);
-            mPausedRinging = true;
         }
 
         if (mServiceBound && (mSipService != null && mSipService.getCurrentCall() == null)) {
