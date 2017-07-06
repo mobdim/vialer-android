@@ -34,6 +34,7 @@ import com.voipgrid.vialer.logging.RemoteLogger;
 import com.voipgrid.vialer.media.BluetoothMediaButtonReceiver;
 import com.voipgrid.vialer.media.MediaManager;
 import com.voipgrid.vialer.permissions.MicrophonePermission;
+import com.voipgrid.vialer.permissions.ReadExternalStoragePermission;
 import com.voipgrid.vialer.sip.SipCall;
 import com.voipgrid.vialer.sip.SipConstants;
 import com.voipgrid.vialer.sip.SipService;
