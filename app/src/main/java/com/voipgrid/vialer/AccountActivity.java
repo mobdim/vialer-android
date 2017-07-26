@@ -36,7 +36,7 @@ public class AccountActivity extends LoginRequiredActivity implements
         Switch.OnCheckedChangeListener, AdapterView.OnItemSelectedListener,
         Callback {
 
-    private CompoundButton mSwitch;
+    private CompoundButton mVoipSwitch;
     private CompoundButton m3GSwitch;
     private EditText mSipIdEditText;
     private EditText mRemoteLogIdEditText;
@@ -69,8 +69,8 @@ public class AccountActivity extends LoginRequiredActivity implements
         mRemoteLogIdEditText = (EditText) findViewById(R.id.remote_logging_id_edit_text);
         mRemoteLogIdEditText.setVisibility(View.GONE);
         mSipIdEditText = ((EditText) findViewById(R.id.account_sip_id_edit_text));
-        mSwitch = (CompoundButton) findViewById(R.id.account_sip_switch);
-        mSwitch.setOnCheckedChangeListener(this);
+        mVoipSwitch = (CompoundButton) findViewById(R.id.account_sip_switch);
+        mVoipSwitch.setOnCheckedChangeListener(this);
 
         initConnectionSpinner();
         initRemoteLoggingSwitch();
@@ -176,7 +176,7 @@ public class AccountActivity extends LoginRequiredActivity implements
                 mSipIdEditText.setText(mPhoneAccount.getAccountId());
             }
         } else {
-            mSwitch.setVisibility(View.GONE);
+            mVoipSwitch.setVisibility(View.GONE);
         }
         ((EditText) findViewById(R.id.account_mobile_number_edit_text))
                 .setText(mSystemUser.getMobileNumber());

@@ -28,6 +28,7 @@ import com.voipgrid.vialer.onboarding.SetupActivity;
 import com.voipgrid.vialer.permissions.ContactsPermission;
 import com.voipgrid.vialer.permissions.PhonePermission;
 import com.voipgrid.vialer.permissions.ReadExternalStoragePermission;
+import com.voipgrid.vialer.reachability.ReachabilityReceiver;
 import com.voipgrid.vialer.util.ConnectivityHelper;
 import com.voipgrid.vialer.util.JsonStorage;
 import com.voipgrid.vialer.util.PhoneAccountHelper;
@@ -44,6 +45,7 @@ public class MainActivity extends NavigationDrawerActivity implements
     private int requestCounter = -1;
 
     private BroadcastReceiver mBroadcastReceiver;
+    private ReachabilityReceiver mReachabilityReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +122,7 @@ public class MainActivity extends NavigationDrawerActivity implements
         openDialerFab.setOnClickListener(this);
 
         requestCounter = 0;
+        mReachabilityReceiver = new ReachabilityReceiver(this);
     }
 
     private void askForPermissions(int requestNr) {
