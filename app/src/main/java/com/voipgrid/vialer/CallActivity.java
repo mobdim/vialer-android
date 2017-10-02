@@ -272,6 +272,11 @@ public class CallActivity extends LoginRequiredActivity
 
         // Get the intent to see if it's an outgoing or an incoming call.
         mType = intent.getType();
+
+        if (mType == null) {
+            mRemoteLogger.e("Activity started without mType");
+            finish();
+        }
         if (mType.equals(TYPE_INCOMING_CALL) || mType.equals(TYPE_OUTGOING_CALL)) {
             // Update the textView with a number URI.
             mPhoneNumberToDisplay = intent.getStringExtra(PHONE_NUMBER);
