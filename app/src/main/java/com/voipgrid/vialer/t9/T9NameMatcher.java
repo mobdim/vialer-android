@@ -1,5 +1,7 @@
 package com.voipgrid.vialer.t9;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,16 +40,21 @@ public class T9NameMatcher {
         ArrayList<String> possibleQueries = T9Query.generateT9NameQueries(displayName);
         String queryOfWholeName = possibleQueries.get(0);
 
-        String strippedDisplayName = displayName.replaceAll(" ", "");
+        String SpacelessDisplayName = displayName.replaceAll(" ", "");
 
         int start = queryOfWholeName.indexOf(t9Query);
         int end = start + t9Query.length();
 
+        Log.d("Debug", "##########");
+        Log.d("Debug", t9Query);
+        Log.d("Debug", displayName);
+        Log.d("Debug", "< "+ start + "..." + end);
+
         // Create a string with the highlighted part without whitespace.
         StringBuilder builder = new StringBuilder();
-        builder.append(strippedDisplayName.substring(0, start));
-        builder.append("<b>" + strippedDisplayName.substring(start, end) + "</b>");
-        builder.append(strippedDisplayName.substring(end, strippedDisplayName.length()));
+        builder.append(SpacelessDisplayName.substring(0, start));
+        builder.append("<b>" + SpacelessDisplayName.substring(start, end) + "</b>");
+        builder.append(SpacelessDisplayName.substring(end, SpacelessDisplayName.length()));
 
         String matchedWithoutSpaces = builder.toString();
 
@@ -86,8 +93,39 @@ public class T9NameMatcher {
         }
 
         builder.append(matchedWithoutSpaces.substring(previousIndex, matchedWithoutSpaces.length()));
-
+        String fixedResult = fix(builder.toString(), start, end);
         return dealWithSpecialCharacter(builder.toString());
+    }
+
+    private static String fix(String boldedText, int start, int end) {
+        String boldString = boldedText.split("<b>")[1].split("</b>")[0];
+        // Keeping a count of the number of special chars
+        int SpecialCharcount = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
+        int SpacesCount = boldString.length() - boldString.replaceAll(" ", "").length();
+        // With no special chars, no need to work on the string any more.
+        if (SpecialCharcount < 1) {
+            return boldedText;
+        }
+
+        String beforeFirstTag = "";
+        if (boldedText.startsWith("<b>")) {
+            beforeFirstTag = boldedText.split("<b>")[0];
+        }
+        String inbetweenTags = boldedText.split("<b>")[1].split("</br>")[0];
+        String afterEndTag = boldedText.split("</b>")[1];
+        int SpecialCharcountInCut = inbetweenTags.length() - inbetweenTags.replaceAll("[^A-Za-z0-9 ]","").length();
+
+        if (SpecialCharcountInCut > 1) {
+
+            afterEndTag.substring(0, SpecialCharcountInCut);
+
+            return beforeFirstTag + "<b>";
+        }
+
+
+
+
+        return boldedText;
     }
 
     /**
@@ -96,10 +134,12 @@ public class T9NameMatcher {
      */
     public static String dealWithSpecialCharacter(String boldedText) {
         String boldString = boldedText.split("<b>")[1].split("</b>")[0];
+        // Keeping a count of the number of special chars
         int count = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
         if (count < 1) {
             return boldedText;
         }
+
         String firstSplit = boldedText.split("</b>")[0];
         try {
             String secondSplit = boldedText.split("</b>")[1];
