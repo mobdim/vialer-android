@@ -94,16 +94,18 @@ public class T9NameMatcher {
 
         builder.append(matchedWithoutSpaces.substring(previousIndex, matchedWithoutSpaces.length()));
         String fixedResult = fix(builder.toString(), start, end);
-        return dealWithSpecialCharacter(builder.toString());
+//        return dealWithSpecialCharacter(builder.toString());
+        Log.d("DEBUG", fixedResult);
+        return fixedResult;
     }
 
     private static String fix(String boldedText, int start, int end) {
         String boldString = boldedText.split("<b>")[1].split("</b>")[0];
         // Keeping a count of the number of special chars
-        int SpecialCharcount = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
-        int SpacesCount = boldString.length() - boldString.replaceAll(" ", "").length();
+        int specialCharcount = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
+
         // With no special chars, no need to work on the string any more.
-        if (SpecialCharcount < 1) {
+        if (specialCharcount < 1) {
             return boldedText;
         }
 
@@ -112,18 +114,26 @@ public class T9NameMatcher {
             beforeFirstTag = boldedText.split("<b>")[0];
         }
         String inbetweenTags = boldedText.split("<b>")[1].split("</br>")[0];
-        String afterEndTag = boldedText.split("</b>")[1];
-        int SpecialCharcountInCut = inbetweenTags.length() - inbetweenTags.replaceAll("[^A-Za-z0-9 ]","").length();
-
-        if (SpecialCharcountInCut > 1) {
-
-            afterEndTag.substring(0, SpecialCharcountInCut);
-
-            return beforeFirstTag + "<b>";
+        String afterEndTag = "";
+        if (!boldedText.endsWith("<b>")) {
+            afterEndTag = boldedText.split("</b>")[1];
         }
+        int specialCharcountInCut = inbetweenTags.length() - inbetweenTags.replaceAll("[^A-Za-z0-9 ]","").length();
 
+        if (specialCharcountInCut > 1) {
 
+            String firstCut = afterEndTag.substring(0, specialCharcountInCut-1);
+            String secondCut = afterEndTag.substring(specialCharcountInCut-1, afterEndTag.length()-specialCharcountInCut);
 
+            Log.d("Debug", "beforeFirstTag "+ beforeFirstTag);
+            Log.d("Debug", "inbetweenTags "+ inbetweenTags);
+            Log.d("Debug", "firstCut "+ firstCut);
+            Log.d("Debug", "secondCut "+ secondCut);
+            Log.d("Debug", "afterEndTag "+ afterEndTag);
+
+            return beforeFirstTag + "<b>" + inbetweenTags + firstCut + "</b>" + secondCut;
+
+        }
 
         return boldedText;
     }
