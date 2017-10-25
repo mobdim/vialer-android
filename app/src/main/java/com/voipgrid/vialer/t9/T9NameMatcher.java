@@ -1,7 +1,5 @@
 package com.voipgrid.vialer.t9;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,11 +42,6 @@ public class T9NameMatcher {
 
         int start = queryOfWholeName.indexOf(t9Query);
         int end = start + t9Query.length();
-
-        Log.d("Debug", "##########");
-        Log.d("Debug", t9Query);
-        Log.d("Debug", displayName);
-        Log.d("Debug", "< "+ start + "..." + end);
 
         // Create a string with the highlighted part without whitespace.
         StringBuilder builder = new StringBuilder();
@@ -93,13 +86,15 @@ public class T9NameMatcher {
         }
 
         builder.append(matchedWithoutSpaces.substring(previousIndex, matchedWithoutSpaces.length()));
-        String fixedResult = fix(builder.toString(), start, end);
-//        return dealWithSpecialCharacter(builder.toString());
-        Log.d("DEBUG", fixedResult);
+        String fixedResult = dealWithSpecialCharacter(builder.toString(), start, end);
         return fixedResult;
     }
 
-    private static String fix(String boldedText, int start, int end) {
+    /**
+     * Fixes inaccuracies in bolding when special chars are in the string.
+     * This method moves the missing chars from outside the tags to the inside.
+     */
+    private static String dealWithSpecialCharacter(String boldedText, int start, int end) {
         String boldString = boldedText.split("<b>")[1].split("</b>")[0];
         // Keeping a count of the number of special chars
         int specialCharcount = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
@@ -113,56 +108,24 @@ public class T9NameMatcher {
         if (boldedText.startsWith("<b>")) {
             beforeFirstTag = boldedText.split("<b>")[0];
         }
-        String inbetweenTags = boldedText.split("<b>")[1].split("</br>")[0];
+        String inbetweenTags = boldedText.split("<b>")[1].split("</b>")[0];
         String afterEndTag = "";
         if (!boldedText.endsWith("<b>")) {
             afterEndTag = boldedText.split("</b>")[1];
         }
         int specialCharcountInCut = inbetweenTags.length() - inbetweenTags.replaceAll("[^A-Za-z0-9 ]","").length();
+        int spacesInCut = inbetweenTags.length() - inbetweenTags.replaceAll(" ", "").length();
+        if (specialCharcountInCut > 0) {
 
-        if (specialCharcountInCut > 1) {
-
-            String firstCut = afterEndTag.substring(0, specialCharcountInCut-1);
-            String secondCut = afterEndTag.substring(specialCharcountInCut-1, afterEndTag.length()-specialCharcountInCut);
-
-            Log.d("Debug", "beforeFirstTag "+ beforeFirstTag);
-            Log.d("Debug", "inbetweenTags "+ inbetweenTags);
-            Log.d("Debug", "firstCut "+ firstCut);
-            Log.d("Debug", "secondCut "+ secondCut);
-            Log.d("Debug", "afterEndTag "+ afterEndTag);
-
-            return beforeFirstTag + "<b>" + inbetweenTags + firstCut + "</b>" + secondCut;
-
-        }
-
-        return boldedText;
-    }
-
-    /**
-     * Fixes inaccuracies in bolding when special chars are in the string.
-     * This method moves the missing chars from outside the tags to the inside.
-     */
-    public static String dealWithSpecialCharacter(String boldedText) {
-        String boldString = boldedText.split("<b>")[1].split("</b>")[0];
-        // Keeping a count of the number of special chars
-        int count = boldString.length() - boldString.replaceAll("[^A-Za-z0-9 ]","").length();
-        if (count < 1) {
-            return boldedText;
-        }
-
-        String firstSplit = boldedText.split("</b>")[0];
-        try {
-            String secondSplit = boldedText.split("</b>")[1];
-            String stringToMove = secondSplit.substring(0, count);
-            if (stringToMove.charAt(stringToMove.length()-1) == ' '){
-                count ++;
-                stringToMove = secondSplit.substring(0, count);
+            String firstCut = afterEndTag.substring(0, specialCharcountInCut+spacesInCut+1);
+            int unExpectedSpecialChars = firstCut.length() - firstCut.replaceAll("[^A-Za-z0-9 ]","").length();
+            if (unExpectedSpecialChars > 0) {
+                firstCut = afterEndTag.substring(0, specialCharcountInCut+spacesInCut+1+unExpectedSpecialChars);
             }
-            return firstSplit+stringToMove+"</b>"+boldedText.substring((boldedText.lastIndexOf("</b>")+4+count));
-        } catch (IndexOutOfBoundsException e) {
-            return boldedText;
+            String secondCut = afterEndTag.substring(firstCut.length(), afterEndTag.length());
+            return beforeFirstTag + "<b>" + inbetweenTags + firstCut + "</b>" + secondCut;
         }
-
+        return boldedText;
     }
 
     /**
