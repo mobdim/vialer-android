@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -20,6 +21,7 @@ import com.voipgrid.vialer.sip.SipUri;
 import com.voipgrid.vialer.util.ConnectivityHelper;
 import com.voipgrid.vialer.util.PhoneNumberUtils;
 
+import java.time.Instant;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -62,6 +64,7 @@ public class FcmMessagingService extends FirebaseMessagingService {
         mRemoteLogger.d("onMessageReceived");
         Map<String, String> data = remoteMessage.getData();
         String requestType = data.get(MESSAGE_TYPE);
+        String messageStartTime = data.get(MESSAGE_START_TIME) != null ? data.get(MESSAGE_START_TIME) : "";
 
         if (requestType == null) {
             mRemoteLogger.e("No requestType");
@@ -92,6 +95,15 @@ public class FcmMessagingService extends FirebaseMessagingService {
                 }
             }
 
+            Double startTimeDoubleMillis = Double.parseDouble(messageStartTime.replace(messageStartTime.substring(messageStartTime.length()), ""))*1000;
+            Long timePassed = System.currentTimeMillis() - Double.valueOf(startTimeDoubleMillis).longValue();
+//
+//            Measure the time from receipt of an push notification of type “call” until the http response back the the middleware has finished.
+//            Timing with Category: “Middleware”
+//            Interval: time in milliseconds
+//            Name: “Response Time”
+//            Label: none
+//
             if (!connectionSufficient) {
                 mRemoteLogger.e("Connection is insufficient. For now do nothing and wait for next middleware push");
                 return;
@@ -110,7 +122,6 @@ public class FcmMessagingService extends FirebaseMessagingService {
                 String callerId = data.get(CALLER_ID) != null ? data.get(CALLER_ID) : "";
                 String responseUrl = data.get(RESPONSE_URL) != null ? data.get(RESPONSE_URL) : "";
                 String requestToken = data.get(REQUEST_TOKEN) != null ? data.get(REQUEST_TOKEN) : "";
-                String messageStartTime = data.get(MESSAGE_START_TIME) != null ? data.get(MESSAGE_START_TIME) : "";
 
                 mRemoteLogger.d("Payload processed, calling startService method");
 
